@@ -1,0 +1,96 @@
+<mat-toolbar color="primary"> Detalle del Paciente </mat-toolbar>
+<mat-toolbar color="secondary" *ngIf="name$ | async as name">{{
+  name
+}}</mat-toolbar>
+<button
+  class="btn-navigate"
+  mat-raised-button
+  color="primary"
+  routerLink="/pacientes"
+>
+  Volver a Lista de Pacientes
+</button>
+<div
+  class="detalle-container"
+  *ngIf="detallePaciente$ | async as detallePaciente"
+>
+  <mat-table [dataSource]="detallePaciente">
+    <!-- Columna: Tipo de Recurso -->
+    <ng-container matColumnDef="resourceType">
+      <mat-header-cell *matHeaderCellDef> Tipo de Recurso </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-chip color="warn" selected>{{ element.resourceType }}</mat-chip>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: ID -->
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.id }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: Fecha Efectiva -->
+    <ng-container matColumnDef="effectiveDateTime">
+      <mat-header-cell *matHeaderCellDef> Fecha Efectiva </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-chip *ngIf="!element.effectiveDateTime" color="warn" selected
+          >N/A</mat-chip
+        >
+        <span *ngIf="element.effectiveDateTime">{{
+          element.effectiveDateTime | date : "medium"
+        }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: Ubicación -->
+    <ng-container matColumnDef="location">
+      <mat-header-cell *matHeaderCellDef> Ubicación </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-chip *ngIf="!element.location?.display" color="warn" selected
+          >N/A</mat-chip
+        >
+        <span *ngIf="element.location?.display">{{
+          element.location.display
+        }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: valueQuantity -->
+    <ng-container matColumnDef="valueQuantity">
+      <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-chip *ngIf="!element.valueQuantity" color="warn" selected
+          >N/A</mat-chip
+        >
+        <span *ngIf="element.valueQuantity">
+          {{ element.valueQuantity.value }} {{ element.valueQuantity.unit }}
+        </span>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Fila de Encabezado y Fila de Contenido -->
+    <mat-header-row
+      *matHeaderRowDef="[
+        'resourceType',
+        'id',
+        'effectiveDateTime',
+        'location',
+        'valueQuantity'
+      ]"
+    ></mat-header-row>
+    <mat-row
+      *matRowDef="
+        let row;
+        columns: [
+          'resourceType',
+          'id',
+          'effectiveDateTime',
+          'location',
+          'valueQuantity'
+        ]
+      "
+    ></mat-row>
+  </mat-table>
+</div>

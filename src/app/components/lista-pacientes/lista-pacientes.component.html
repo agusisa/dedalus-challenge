@@ -1,0 +1,57 @@
+<mat-toolbar color="primary"> Lista de Pacientes </mat-toolbar>
+<div class="detalle-container" *ngIf="pacientes$ | async as pacientes">
+  <mat-table [dataSource]="pacientes">
+    <!-- Columna: Nombre -->
+    <ng-container matColumnDef="nombre">
+      <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+      <mat-cell *matCellDef="let paciente">
+        {{ paciente.name[0]?.given[0] || "N/A" }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: Apellidos -->
+    <ng-container matColumnDef="apellidos">
+      <mat-header-cell *matHeaderCellDef> Apellidos </mat-header-cell>
+      <mat-cell *matCellDef="let paciente">
+        {{ paciente.name[0]?.family || "N/A" }}
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: Fecha de Nacimiento -->
+    <ng-container matColumnDef="fechaNacimiento">
+      <mat-header-cell *matHeaderCellDef> Fecha de Nacimiento </mat-header-cell>
+
+      <mat-cell *matCellDef="let paciente">
+        <mat-chip *ngIf="!paciente.birthDate" color="warn" selected
+          >N/A</mat-chip
+        >
+        <span *ngIf="paciente.birthDate">{{
+          paciente.birthDate | date : "medium"
+        }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Columna: Género -->
+    <ng-container matColumnDef="genero">
+      <mat-header-cell *matHeaderCellDef> Género </mat-header-cell>
+
+      <mat-cell *matCellDef="let paciente">
+        <mat-chip *ngIf="!paciente.gender" color="warn" selected>N/A</mat-chip>
+        <span *ngIf="paciente.gender">{{ paciente.gender }}</span>
+      </mat-cell>
+    </ng-container>
+
+    <!-- Fila de Encabezado y Fila de Contenido -->
+    <mat-header-row
+      *matHeaderRowDef="['nombre', 'apellidos', 'fechaNacimiento', 'genero']"
+    ></mat-header-row>
+
+    <mat-row
+      *matRowDef="
+        let row;
+        columns: ['nombre', 'apellidos', 'fechaNacimiento', 'genero']
+      "
+      (click)="mostrarDetalle(row.id)"
+    ></mat-row>
+  </mat-table>
+</div>
